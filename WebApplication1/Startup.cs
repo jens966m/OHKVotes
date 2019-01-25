@@ -2,17 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Core.ApplicationService;
+using Core.ApplicationService.Services;
+using Core.DomainService;
+using Infrastructure.Data;
+using Infrastructure.Data.Repos;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.EntityFrameworkCore;
 
-namespace SimpleBackendAPIs
+namespace OHKUI
 {
     public class Startup
     {
@@ -27,8 +32,10 @@ namespace SimpleBackendAPIs
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddDbContext<MyAppContext>(options => options.UseSqlite("Data Source=OHK.db"));
+            services.AddTransient<IPlayerService, PlayerService>();
+            services.AddTransient<IPlayerRepository, PlayerRepository>();
 
-            services.AddDbContext<AppContext>(options => options.UseSqlite("Data Source=PlayersOHK.db"));
 
         }
 
