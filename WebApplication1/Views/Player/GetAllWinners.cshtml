@@ -30,6 +30,10 @@
                 <th>
                     @Html.DisplayNameFor(model => model.NumberOfVotes)
                 </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Votes)
+                </th>
+
                 <th></th>
             </tr>
         </thead>
@@ -43,6 +47,26 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.NumberOfVotes)
                     </td>
+
+                    <td>
+                        @if (item.Votes != null)
+                        {
+
+                            @foreach (var vote in item.Votes)
+                            {
+
+                                if (vote.Comment != null)
+                                {
+
+                                    @Html.DisplayFor(modelItem => vote.Comment)<br>
+
+
+                                }
+                            }
+                        }
+
+                    </td>
+
                 </tr>
             }
         </tbody>

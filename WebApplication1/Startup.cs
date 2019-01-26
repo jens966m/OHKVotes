@@ -35,6 +35,7 @@ namespace OHKUI
             services.AddDbContext<MyAppContext>(options => options.UseSqlite("Data Source=OHK.db"));
             services.AddTransient<IPlayerService, PlayerService>();
             services.AddTransient<IPlayerRepository, PlayerRepository>();
+            services.AddTransient<IVoteRepo, VoteRepo>();
 
 
         }

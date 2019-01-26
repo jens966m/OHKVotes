@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.ApplicationService;
+using Core.DomainService;
 using Core.Entity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,9 +15,11 @@ namespace OHKUI.Controllers
     public class PlayerController : Controller
     {
         private readonly IPlayerService service;
-        public PlayerController(IPlayerService playerService)
+        private readonly IVoteRepo _voteRepo;
+        public PlayerController(IPlayerService playerService, IVoteRepo voteRepo)
         {
             service = playerService;
+            _voteRepo = voteRepo;
         }
 
 
@@ -39,10 +42,10 @@ namespace OHKUI.Controllers
 
         [HttpGet("winner")]
         public IActionResult GetAllWinners()
+
         {
            var tempt = service.GetPlayersWithMostVotes();
             return View(tempt);
-
         }
 
 
@@ -60,12 +63,12 @@ namespace OHKUI.Controllers
         public ActionResult Post([FromForm] string name)
         {
 
-            if (name != null)
+            if (name != null && name.Length<=20)
             {
                 var test = service.CreatePlayer(name);
                 return RedirectToAction("GetAllPlayers");
             }
-            else return null;
+            return BadRequest("over 0 og under 20 karakterer på navn");
         }
 
         [HttpPost]
@@ -78,10 +81,11 @@ namespace OHKUI.Controllers
              return RedirectToAction("GetAllPlayers");
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                var test = e.Message;
 
-                return BadRequest("something went wrong");
+                return BadRequest("something went wrong - nulstil aftemning inden slet af spiller");
             }
 
         }
@@ -92,23 +96,28 @@ namespace OHKUI.Controllers
             try
             {
                 service.ClearAllVotes();
+                _voteRepo.ClearAllComments();
                 return RedirectToAction("GetAllPlayers");
 
             }
             catch (Exception)
             {
-                return BadRequest("Somethin went wrong");
+                return BadRequest("Something went wrong");
             }
 
         }
 
         [HttpPost]
+
+
         [Route("VoteForMember")]
-        public ActionResult VoteByPost([FromForm] int id)
+        public ActionResult VoteByPost([FromForm] int id, [FromForm] string comment)
         {
             try
             {
+                Player player = new Player() { Id = id };
                 service.CountOneUpVote(id);
+                _voteRepo.CreateComment(player, comment);
                 return RedirectToAction("GetAllPlayers");
 
             }
@@ -131,6 +140,7 @@ namespace OHKUI.Controllers
         public void Delete()
         {
             service.ClearAllVotes();
+            _voteRepo.ClearAllComments();
         }
 
         [HttpDelete("{id}")]

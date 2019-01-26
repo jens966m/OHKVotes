@@ -12,5 +12,8 @@ namespace Core.DomainService
         void ClearAllVotes();
         void Vote(int id);
         void Delete(int id);
+
+        IEnumerable<Player> GetPlayersWithVotes();
+
     }
 }

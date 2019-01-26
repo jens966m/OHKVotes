@@ -34,16 +34,27 @@ namespace Infrastructure.Data.Repos
             return player;
         }
 
+
+
         public void Delete(int id)
         {
             Player player = new Player() { Id = id };
-            _context.Remove(player);
+            Player DeletedPLayer = _context.Players.Remove(player).Entity;
             _context.SaveChanges();
         }
 
         public IEnumerable<Player> GetAll()
         {
             return _context.Players.AsNoTracking();
+        }
+
+        public IEnumerable<Player> GetPlayersWithVotes()
+        {
+            var test = _context.Players.Include(x => x.Votes);
+            return _context.Players.
+                Include(x => x.Votes);
+
+
         }
 
         public void Vote(int id)

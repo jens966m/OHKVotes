@@ -9,9 +9,11 @@ namespace Core.ApplicationService.Services
 {
     public class PlayerService : IPlayerService
     {
-        IPlayerRepository repo;
-        public PlayerService(IPlayerRepository playerRepo)
+       private readonly IPlayerRepository repo;
+        private readonly IVoteRepo voteRepo;
+        public PlayerService(IPlayerRepository playerRepo, IVoteRepo voteRepoet)
         {
+            voteRepo = voteRepoet;
             repo = playerRepo;
         }
 
@@ -32,6 +34,7 @@ namespace Core.ApplicationService.Services
 
         public void DeletePlayer(int id)
         {
+
             repo.Delete(id);
                 
 
@@ -45,7 +48,7 @@ namespace Core.ApplicationService.Services
 
         public List<Player> GetPlayersWithMostVotes()
         {
-            var playerlist= repo.GetAll().ToList();
+            var playerlist= repo.GetPlayersWithVotes().ToList();
             var sortedlist= playerlist.OrderByDescending(o => o.NumberOfVotes).ToList();
 
             return sortedlist;

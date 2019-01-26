@@ -22,7 +22,7 @@
     </form>
 
     <form action="player/winner" method="get">
-        <button class="btn btn-primary" type="submit" >Se Resultat</button>
+        <button class="btn btn-primary" type="submit">Se Resultat</button>
     </form>
 
 
@@ -50,9 +50,14 @@
 
 
                         <form action="player/VoteForMember" method="post">
+                            @Html.Hidden("id", item.Id)
+                            kommentar: <input type="text" name="comment"><br>
+                            @*<input type="hidden" id="id" name="id" value="@item.Id">*@
                             <button class="btn btn-primary" type="submit" onclick="alert('Du har stemt!')">Stem!</button>
-                            <input type="hidden" name="id" value="@item.Id">
                         </form>
+
+
+
                         <form action="player/deleteMember" method="post">
                             <button class="btn btn-primary" type="submit" onclick="alert('bruger slettet!')">Slet spiller! </button>
                             <input type="hidden" name="id" value="@item.Id">
@@ -65,4 +70,7 @@
     </table>
 </body>
 </html>
+
+
+
 

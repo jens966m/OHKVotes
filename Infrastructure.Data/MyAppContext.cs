@@ -1,12 +1,15 @@
 ﻿using Core.Entity;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 
 namespace Infrastructure.Data
 {
     public class MyAppContext : DbContext
     {
         public DbSet<Player> Players { get; set; }
+        public DbSet<Vote> Votes { get; set; }
+
 
 
         public MyAppContext(DbContextOptions<MyAppContext> options) : base(options)
@@ -14,23 +17,26 @@ namespace Infrastructure.Data
 
             //Database.EnsureDeleted();
             Database.EnsureCreated();
-            //AddSampleData();
+          // AddSampleData();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-
-
+            modelBuilder.Entity<Player>()
+                .HasMany(x => x.Votes);
 
         }
 
 
         private void AddSampleData()
         {
-            var spiller = new Player() { Name = "Danny" };
-            Players.Add(spiller);
 
+
+
+            var spiller = new Player() { Name = "Danny" };
+
+      
             var spiller2 = new Player() { Name = "Jens" };
             Players.Add(spiller2);
 
